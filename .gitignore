@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+
+.vscode/
+.env
+.DS_Store
+
+secrets/
+service-account.json
+ee-msingh8-176422747743.json
+
+.venv/
+AI/
+
+.ipynb_checkpoints/

@@ -1,0 +1,8 @@
+{
+  "model": "XGBoost",
+  "version": "v1",
+  "r2_year_split": 0.8901,
+  "mae_year_split": 826.09,
+  "training_data": "ASI_feature_engineered_v1.csv",
+  "target": "yield_kg_ha"
+}
