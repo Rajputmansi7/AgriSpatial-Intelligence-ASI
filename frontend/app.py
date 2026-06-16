@@ -6,6 +6,11 @@ from pyproj import Geod
 
 from map_component import render_map
 
+API_URL = st.secrets.get(
+    "API_URL",
+    "http://127.0.0.1:8000/predict"
+)
+
 
 st.info(
     """
@@ -119,7 +124,7 @@ if st.button("Predict Yield"):
         try:
 
             response = requests.post(
-                "http://127.0.0.1:8000/predict",
+                API_URL,
                 json=payload,
                 timeout=120
             )
