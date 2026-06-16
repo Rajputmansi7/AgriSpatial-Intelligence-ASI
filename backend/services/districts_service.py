@@ -61,12 +61,12 @@ class DistrictService:
 
             if polygon.contains(point):
 
-                district = str(
-                    feature["properties"]["NAME_2"]
-                ).upper().strip()
+               district = str(feature["properties"]["NAME_2"]).upper().strip()
+
+               district_key = district.replace(" ", "")
 
                 agro_zone = AGRO_ZONE_MAPPING.get(
-                    district,
+                    district_key,
                     "UNKNOWN"
                 )
 
