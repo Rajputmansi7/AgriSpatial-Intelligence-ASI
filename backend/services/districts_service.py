@@ -40,10 +40,23 @@ class DistrictService:
 
         with open(
             "backend/data/gujarat_districts.geojson",
-            "r"
+            "r",
+            encoding="utf-8"
         ) as f:
 
             self.geojson = json.load(f)
+
+    def _normalize_district_name(
+        self,
+        district: str
+    ) -> str:
+
+        return (
+            district.upper()
+            .strip()
+            .replace(" ", "")
+            .replace("-", "")
+        )
 
     def get_location_info(
         self,
@@ -51,19 +64,28 @@ class DistrictService:
         longitude: float
     ):
 
-        point = Point(longitude, latitude)
+        point = Point(
+            longitude,
+            latitude
+        )
 
         for feature in self.geojson["features"]:
 
-            polygon = shape(
+            geometry = shape(
                 feature["geometry"]
             )
 
-            if polygon.contains(point):
+            if geometry.contains(point):
 
-               district = str(feature["properties"]["NAME_2"]).upper().strip()
+                district = str(
+                    feature["properties"]["NAME_2"]
+                ).upper().strip()
 
-               district_key = district.replace(" ", "")
+                district_key = (
+                    self._normalize_district_name(
+                        district
+                    )
+                )
 
                 agro_zone = AGRO_ZONE_MAPPING.get(
                     district_key,
