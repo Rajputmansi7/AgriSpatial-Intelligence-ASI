@@ -1,5 +1,7 @@
-import geopandas as gpd
+import json
+
 from shapely.geometry import Point
+from shapely.geometry import shape
 
 
 AGRO_ZONE_MAPPING = {
@@ -36,9 +38,12 @@ class DistrictService:
 
     def __init__(self):
 
-        self.districts = gpd.read_file(
-            "backend/data/gujarat_districts.geojson"
-        )
+        with open(
+            "backend/data/gujarat_districts.geojson",
+            "r"
+        ) as f:
+
+            self.geojson = json.load(f)
 
     def get_location_info(
         self,
@@ -46,33 +51,33 @@ class DistrictService:
         longitude: float
     ):
 
-        point = Point(
-            longitude,
-            latitude
-        )
+        point = Point(longitude, latitude)
 
-        match = self.districts[
-            self.districts.contains(point)
-        ]
+        for feature in self.geojson["features"]:
 
-        if len(match) == 0:
+            polygon = shape(
+                feature["geometry"]
+            )
 
-            return {
-                "district": "UNKNOWN",
-                "agro_zone": "UNKNOWN"
-            }
+            if polygon.contains(point):
 
-        district = str(
-        match.iloc[0]["NAME_2"]).upper().strip()
+                district = str(
+                    feature["properties"]["NAME_2"]
+                ).upper().strip()
 
-        agro_zone = AGRO_ZONE_MAPPING.get(
-            district,
-            "UNKNOWN"
-        )
+                agro_zone = AGRO_ZONE_MAPPING.get(
+                    district,
+                    "UNKNOWN"
+                )
+
+                return {
+                    "district": district,
+                    "agro_zone": agro_zone
+                }
 
         return {
-            "district": district,
-            "agro_zone": agro_zone
+            "district": "UNKNOWN",
+            "agro_zone": "UNKNOWN"
         }
 
 
