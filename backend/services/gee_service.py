@@ -5,16 +5,34 @@ from datetime import datetime, timedelta
 # -----------------------------------
 # GEE AUTH
 # -----------------------------------
+import os
+import json
+import tempfile
+import ee
+
+service_account_info = json.loads(
+    os.environ["GEE_SERVICE_ACCOUNT_JSON"]
+)
+
+with tempfile.NamedTemporaryFile(
+    mode="w",
+    suffix=".json",
+    delete=False
+) as f:
+
+    json.dump(service_account_info, f)
+
+    credential_path = f.name
+
 credentials = ee.ServiceAccountCredentials(
-    "asi-earth-engine@ee-msingh8.iam.gserviceaccount.com",
-    "secrets/ee-msingh8-176422747743.json"
+    service_account_info["client_email"],
+    credential_path
 )
 
 ee.Initialize(
     credentials=credentials,
-    project="ee-msingh8"
+    project=os.environ["GEE_PROJECT_ID"]
 )
-
 # -----------------------------------
 # GEE SERVICE
 # -----------------------------------
