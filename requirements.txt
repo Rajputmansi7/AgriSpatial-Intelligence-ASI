@@ -14,7 +14,7 @@ xgboost==3.1.2
 
 joblib==1.5.3
 
-geopandas==1.0.1
+geopandas==0.14.4
 shapely==2.1.0
 pyproj==3.6.1
 
